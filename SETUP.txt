@@ -5,12 +5,26 @@
 
 ## Installation Steps
 
-1. **Open a terminal/command prompt** and navigate to the root directory of the project:
-   ```bash
-   cd path/to/FALCON-MVP
-   ```
+1. Important Setup Note
 
-2. **Create a virtual environment** to keep dependencies isolated:
+For the best evaluation experience, we kindly request you to download the project as a ZIP file from the repository instead of cloning it using Git.
+
+The project contains multiple backend modules, simulation components, generated artifacts, and configuration-dependent files. Due to the way Git handles certain environment-specific files, permissions, and local runtime configurations, cloning the repository may occasionally miss or alter some files required for the complete local execution flow.
+
+The ZIP package represents the complete tested project snapshot and ensures that all required files are available exactly as validated by our team.
+
+Recommended steps:
+
+Download the repository as a ZIP file.
+Extract the project folder.
+Follow the setup instructions provided in the README.md.
+Run the system using the provided execution commands.
+
+This ensures the intended FALCON MVP experience with all modules functioning correctly.
+
+Thank you for your understanding.
+
+2. Create a virtual environment to keep dependencies isolated:
    ```bash
    # On Windows
    python -m venv venv
@@ -19,7 +33,7 @@
    python3 -m venv venv
    ```
 
-3. **Activate the virtual environment**:
+3. Activate the virtual environment:
    ```bash
    # On Windows Command Prompt
    venv\Scripts\activate.bat
@@ -31,12 +45,12 @@
    source venv/bin/activate
    ```
 
-4. **Install the required dependencies**:
+4. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-5. **Start the FALCON MVP**:
+5. Start the FALCON MVP:
    ```bash
    python start_falcon.py
    ```
