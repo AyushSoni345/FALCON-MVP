@@ -1,0 +1,4 @@
+weights:
+  ai_confidence: 0.40
+  business_context_confidence: 0.30
+  evidence_strength: 0.30

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  event-normalizer:
+    build: .
+    container_name: falcon-event-normalizer
+    ports:
+      - "8000:8000"
+    environment:
+      - FALCON_M2_ENV=production
+      - FALCON_M2_API_TITLE=FALCON Event Normalization & Threat Enrichment
+      - FALCON_M2_HOST=0.0.0.0
+      - FALCON_M2_PORT=8000
+    volumes:
+      # Development Bind-Mount (For hot-reloading code changes in local environment)
+      # WARNING: For production environments, do NOT use this bind-mount. Instead, 
+      # rely strictly on the COPY instruction in the Dockerfile for self-contained, 
+      # immutable deployments.
+      - .:/workspace

@@ -1,0 +1,14 @@
+critical_processes:
+  - "Core Banking"
+  - "Payment Gateway"
+  - "ATM Network"
+test_processes:
+  - "Internal Test Environment"
+  - "Test payment simulation"
+critical_assets:
+  - "Core Ledger"
+  - "ATM"
+non_prod_assets:
+  - "Development Server"
+  - "lab server"
+  - "Sandbox"

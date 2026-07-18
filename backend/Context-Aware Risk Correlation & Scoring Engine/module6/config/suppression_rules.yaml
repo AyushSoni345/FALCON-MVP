@@ -1,0 +1,41 @@
+suppression_rules:
+  - rule_id: "SR-001"
+    rule_name: "isolated_lab_server"
+    version: "1.0.0"
+    severity: "Low"
+    enabled: true
+    owner: "SecOps Engineering"
+    last_modified: "2026-07-15T10:00:00Z"
+    conditions:
+      asset_type: ["Development Server", "lab server", "Sandbox"]
+      production_system: false
+    reason: "Technical severity is high but asset is an isolated non-production resource."
+
+  - rule_id: "SR-002"
+    rule_name: "internal_test_process"
+    version: "1.0.0"
+    severity: "Low"
+    enabled: true
+    owner: "SecOps Engineering"
+    last_modified: "2026-07-15T10:00:00Z"
+    conditions:
+      business_process: ["Internal Test Environment", "Test payment simulation"]
+    reason: "Alert generated during an explicit test or simulation run."
+
+  - rule_id: "SR-003"
+    rule_name: "low_impact_isolated_alert"
+    version: "1.0.0"
+    severity: "Low"
+    enabled: true
+    owner: "SecOps Engineering"
+    last_modified: "2026-07-15T10:00:00Z"
+    conditions:
+      service_impact: ["None"]
+      pii_exposure: false
+      credential_exposure: false
+    reason: "No operational service impact or sensitive data exposure."
+
+overrides:
+  prevent_on_multi_domain: true
+  min_domains_for_override: 2
+  min_correlation_strength: 0.70

@@ -1,0 +1,31 @@
+{
+  "assessment_id": "ASMT-9901-ABC",
+  "incident_id": "INC-8822-XYZ",
+  "assessment_timestamp": "2026-07-15T12:00:00Z",
+  "incident_category": "Multi-Vector Attack",
+  "active_domain_assessments": {
+    "Cyber": {
+      "domain_score": 85.0,
+      "confidence": 0.90,
+      "findings": ["Malware execution detected", "Lateral movement attempts"]
+    },
+    "Fraud": {
+      "domain_score": 90.0,
+      "confidence": 0.88,
+      "findings": ["Anomalous transaction patterns", "Device fingerprint mismatch"]
+    }
+  },
+  "cross_domain_intelligence": {
+    "correlated_domains": ["Cyber", "Fraud"],
+    "common_indicators": ["IP: 192.168.1.55", "User: admin_xyz"],
+    "correlation_strength": 0.85,
+    "notes": "Strong correlation between malware activity and fraudulent login."
+  },
+  "composite_risk_assessment": {
+    "initial_composite_score": 88.0,
+    "primary_threat_vector": "Account Takeover via Malware"
+  },
+  "ai_explanation": "The AI detected a sequence of malware execution followed by a fraudulent transaction attempt from the same device.",
+  "recommended_actions": ["Isolate device", "Block IP", "Suspend account"],
+  "referenced_correlated_security_incident": "SEC-INC-001"
+}

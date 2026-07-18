@@ -1,0 +1,25 @@
+positive_adjustments:
+  production_system: 8.0
+  core_banking_process: 10.0
+  payment_gateway_process: 10.0
+  critical_asset_criticality: 8.0
+  high_asset_criticality: 5.0
+  vip_customer: 6.0
+  vulnerable_customer: 6.0
+  high_net_worth_customer: 6.0
+  pii_data_classification: 8.0
+  credentials_data_classification: 10.0
+  keys_data_classification: 10.0
+  high_value_transaction: 8.0
+  high_financial_exposure: 8.0
+  high_ai_confidence: 5.0
+
+negative_adjustments:
+  internal_test_environment: -15.0
+  development_server: -15.0
+  lab_server: -15.0
+  sandbox: -15.0
+  non_production_system: -10.0
+  low_value_transaction: -5.0
+  no_service_impact: -8.0
+  weak_ai_evidence: -10.0

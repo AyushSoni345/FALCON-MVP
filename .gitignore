@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Generated Data
+*.ndjson
+events.ndjson
+unified_raw_stream.ndjson
+stress.ndjson
+overnight.ndjson
+
+# Python cache
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db

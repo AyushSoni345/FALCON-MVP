@@ -1,0 +1,339 @@
+.env
+.gitignore
+Docs/FinGuard AI.docx
+Docs/FinSPARK- Architecture.pdf
+Docs/FinSpark_Hackathon_PS2_Strategy_Document.pdf
+Docs/FinSpark_PS2_Premium_Proposal.pdf
+Docs/How to integrate modules with simulator.png
+Docs/Module 1 Output.pdf
+Docs/Simulation Layer (1).pdf
+Docs/how to connect simulator with ingestion layer.png
+README.md
+SETUP.txt
+backend/AI-Driven Correlation and Reasoning Engine/README.md
+backend/AI-Driven Correlation and Reasoning Engine/app/configuration/config.py
+backend/AI-Driven Correlation and Reasoning Engine/app/core/container.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/attack_sequence.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/confidence_scoring.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/evidence_validator.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/graph_reasoning.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/hypothesis_generator.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/incident_builder.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/interfaces.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/pattern_recognition.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/predictive_reasoning.py
+backend/AI-Driven Correlation and Reasoning Engine/app/engines/temporal_correlation.py
+backend/AI-Driven Correlation and Reasoning Engine/app/exceptions/exceptions.py
+backend/AI-Driven Correlation and Reasoning Engine/app/main.py
+backend/AI-Driven Correlation and Reasoning Engine/app/models/models.py
+backend/AI-Driven Correlation and Reasoning Engine/app/repositories/incident_repository.py
+backend/AI-Driven Correlation and Reasoning Engine/app/services/correlation_service.py
+backend/AI-Driven Correlation and Reasoning Engine/app/validators/validators.py
+backend/AI-Driven Correlation and Reasoning Engine/examples/run_correlation_client.py
+backend/AI-Driven Correlation and Reasoning Engine/requirements.txt
+backend/AI-Driven Correlation and Reasoning Engine/tests/conftest.py
+backend/AI-Driven Correlation and Reasoning Engine/tests/test_correlation.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/api_main.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/audit_logging/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/audit_logging/audit_logger.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/audit_logging/logger.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/business_context.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/confidence_weights.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/manager.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/priority_thresholds.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/risk_weights.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/schemas.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/scoring_formula.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/suppression_rules.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/config/version.yaml
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/confidence_fusion.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/false_positive_suppression.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/incident_prioritization.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/response_priority.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/engines/risk_scoring.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/evaluators/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/evaluators/completeness.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/evaluators/context_evaluator.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/evaluators/context_loader.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/evaluators/context_normalizer.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/exceptions/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/exceptions/configuration.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/exceptions/pipeline.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/exceptions/rule_engine.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/exceptions/validation.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/interfaces.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/main.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/metrics/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/metrics/collector.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/pipeline.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/repositories/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/repositories/decision_trace_repo.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/schemas/__init__.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/schemas/decision_trace.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/schemas/domain_ai_assessment.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/schemas/unified_risk_assessment.py
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/storage/audit_logs/audit_20260717.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/module6/storage/module6_audit.db
+backend/Context-Aware Risk Correlation & Scoring Engine/samples/context_sample_1.json
+backend/Context-Aware Risk Correlation & Scoring Engine/samples/input_sample_1.json
+backend/Context-Aware Risk Correlation & Scoring Engine/samples/output_sample_1.json
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/audit_logs/audit_20260715.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/corpus_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/corpus_logs_large/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/corpus_validation.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/corpus_validation_large.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/e2e_integration_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/e2e_integration_test.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fast_fat_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fast_fat_pipeline.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fat_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fat_pipeline.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fat_v2_audit.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fat_v2_logs/audit_20260715.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/fat_v2_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/integration_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/integration_test.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/integration_validation.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/metrics/metrics.json
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/module6_audit.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/validation_logs/audit_20260716.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage/validation_test.db
+backend/Context-Aware Risk Correlation & Scoring Engine/storage_test/audit_logs/audit_20260715.jsonl
+backend/Context-Aware Risk Correlation & Scoring Engine/storage_test/integration_test_report.md
+backend/Context-Aware Risk Correlation & Scoring Engine/storage_test/metrics/metrics.json
+backend/Context-Aware Risk Correlation & Scoring Engine/storage_test/module6_audit.db
+backend/Context-Aware Risk Correlation & Scoring Engine/tests/test_integration.py
+backend/Context-Aware Risk Correlation & Scoring Engine/tests/test_scenarios.py
+backend/Decision , Response and Continous Learning Engine/module_8/api_main.py
+backend/Decision , Response and Continous Learning Engine/module_8/config/__init__.py
+backend/Decision , Response and Continous Learning Engine/module_8/config/rules.json
+backend/Decision , Response and Continous Learning Engine/module_8/engines/analyst_feedback_engine.py
+backend/Decision , Response and Continous Learning Engine/module_8/engines/learning_generator.py
+backend/Decision , Response and Continous Learning Engine/module_8/engines/optimization_engine.py
+backend/Decision , Response and Continous Learning Engine/module_8/engines/playbook_engine.py
+backend/Decision , Response and Continous Learning Engine/module_8/engines/response_strategy_engine.py
+backend/Decision , Response and Continous Learning Engine/module_8/engines/soar_task_generator.py
+backend/Decision , Response and Continous Learning Engine/module_8/main.py
+backend/Decision , Response and Continous Learning Engine/module_8/models/input_models.py
+backend/Decision , Response and Continous Learning Engine/module_8/models/output_models.py
+backend/Decision , Response and Continous Learning Engine/module_8/services/response_service.py
+backend/Decision , Response and Continous Learning Engine/module_8/services/validation_service.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/conftest.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_etr_compatibility.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_false_positive.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_high_confidence.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_rejection.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_unknown_incident.py
+backend/Decision , Response and Continous Learning Engine/module_8/tests/test_validation_failure.py
+backend/Decision , Response and Continous Learning Engine/module_8/utils/helpers.py
+backend/Decision , Response and Continous Learning Engine/module_8/utils/logger.py
+backend/Event Normalization/Dockerfile
+backend/Event Normalization/README.md
+backend/Event Normalization/app/api/examples.py
+backend/Event Normalization/app/api/models.py
+backend/Event Normalization/app/api/routes.py
+backend/Event Normalization/app/config.py
+backend/Event Normalization/app/core/engine.py
+backend/Event Normalization/app/core/enrichment/base.py
+backend/Event Normalization/app/core/enrichment/behavior.py
+backend/Event Normalization/app/core/enrichment/fraud.py
+backend/Event Normalization/app/core/enrichment/geo.py
+backend/Event Normalization/app/core/enrichment/mitre.py
+backend/Event Normalization/app/core/enrichment/relationship.py
+backend/Event Normalization/app/core/enrichment/threat_intel.py
+backend/Event Normalization/app/core/normalizers.py
+backend/Event Normalization/app/core/parsers/__init__.py
+backend/Event Normalization/app/core/parsers/atm.py
+backend/Event Normalization/app/core/parsers/base.py
+backend/Event Normalization/app/core/parsers/beneficiary.py
+backend/Event Normalization/app/core/parsers/card.py
+backend/Event Normalization/app/core/parsers/core_banking.py
+backend/Event Normalization/app/core/parsers/edr.py
+backend/Event Normalization/app/core/parsers/firewall.py
+backend/Event Normalization/app/core/parsers/iam.py
+backend/Event Normalization/app/core/parsers/ids.py
+backend/Event Normalization/app/core/parsers/internet_banking.py
+backend/Event Normalization/app/core/parsers/manager.py
+backend/Event Normalization/app/core/parsers/neft_rtgs_imps.py
+backend/Event Normalization/app/core/parsers/quantum.py
+backend/Event Normalization/app/core/parsers/siem.py
+backend/Event Normalization/app/core/parsers/threat_feed.py
+backend/Event Normalization/app/core/parsers/upi.py
+backend/Event Normalization/app/core/parsers/vpn.py
+backend/Event Normalization/app/core/resolver.py
+backend/Event Normalization/app/core/schema.py
+backend/Event Normalization/app/database/memory_repo.py
+backend/Event Normalization/app/database/repository.py
+backend/Event Normalization/app/dependencies.py
+backend/Event Normalization/app/logging_config.py
+backend/Event Normalization/app/main.py
+backend/Event Normalization/app/utils/datetime_utils.py
+backend/Event Normalization/docker-compose.yml
+backend/Event Normalization/docs/API.md
+backend/Event Normalization/docs/integration_guide.md
+backend/Event Normalization/docs/solution_architecture.md
+backend/Event Normalization/requirements.txt
+backend/Event Normalization/tests/conftest.py
+backend/Event Normalization/tests/test_api.py
+backend/Event Normalization/tests/test_enrichment.py
+backend/Event Normalization/tests/test_normalizers.py
+backend/Explainable Threat Intelligence Engine/Module 7/README.md
+backend/Explainable Threat Intelligence Engine/Module 7/app/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/api/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/api/router.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/config/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/config/settings.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/exceptions/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/exceptions/exceptions.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/formatters/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/formatters/formatter.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/ai_reasoning.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/base.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/decision_support.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/evidence_trace.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/executive_summary.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/incident_narrative.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/investigation_guidance.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/root_cause.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/generators/timeline.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/main.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/models/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/models/enums.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/models/requests.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/models/responses.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/services/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/services/assembly.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/templates/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/templates/manager.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/utils/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/validators/__init__.py
+backend/Explainable Threat Intelligence Engine/Module 7/app/validators/validation.py
+backend/Explainable Threat Intelligence Engine/Module 7/requirements.txt
+backend/Explainable Threat Intelligence Engine/Module 7/tests/conftest.py
+backend/Explainable Threat Intelligence Engine/Module 7/tests/test_api.py
+backend/Explainable Threat Intelligence Engine/Module 7/tests/test_assembly.py
+backend/Explainable Threat Intelligence Engine/Module 7/tests/test_generators.py
+backend/Ingestion/api/ingest.py
+backend/Ingestion/collectors/file_collector.py
+backend/Ingestion/config.py
+backend/Ingestion/core/chronology.py
+backend/Ingestion/core/deduplicator.py
+backend/Ingestion/core/pipeline.py
+backend/Ingestion/core/validator.py
+backend/Ingestion/models.py
+backend/Ingestion/requirements.txt
+backend/Ingestion/run.py
+backend/Ingestion/tests/run_e2e_integration_tests.py
+backend/Ingestion/tests/test_integration.py
+backend/Ingestion/tests/test_performance.py
+backend/Ingestion/tests/test_pipeline.py
+backend/Ingestion/verify_specification.py
+backend/Ingestion/walkthrough.md
+backend/Knowledge Graph/requirements.txt
+backend/Knowledge Graph/run_validation.py
+backend/Knowledge Graph/src/builders/__init__.py
+backend/Knowledge Graph/src/builders/base_builder.py
+backend/Knowledge Graph/src/builders/builders.py
+backend/Knowledge Graph/src/core/__init__.py
+backend/Knowledge Graph/src/core/entity_extractor.py
+backend/Knowledge Graph/src/core/graph_context_generator.py
+backend/Knowledge Graph/src/core/graph_index_manager.py
+backend/Knowledge Graph/src/core/graph_metrics_engine.py
+backend/Knowledge Graph/src/core/graph_path_engine.py
+backend/Knowledge Graph/src/core/graph_rules_engine.py
+backend/Knowledge Graph/src/core/graph_state_manager.py
+backend/Knowledge Graph/src/core/relationship_engine.py
+backend/Knowledge Graph/src/core/security_graph_event_producer.py
+backend/Knowledge Graph/src/core/validator.py
+backend/Knowledge Graph/src/ingress/__init__.py
+backend/Knowledge Graph/src/ingress/fastapi_adapter.py
+backend/Knowledge Graph/src/ingress/ingress_adapter.py
+backend/Knowledge Graph/src/main.py
+backend/Knowledge Graph/src/models/__init__.py
+backend/Knowledge Graph/src/models/graph_snapshot.py
+backend/Knowledge Graph/src/models/input_event.py
+backend/Knowledge Graph/src/models/node.py
+backend/Knowledge Graph/src/models/output_event.py
+backend/Knowledge Graph/src/models/relationship.py
+backend/Knowledge Graph/src/storage/__init__.py
+backend/Knowledge Graph/src/storage/graph_store.py
+backend/Knowledge Graph/src/storage/networkx_store.py
+backend/Knowledge Graph/src/utils/__init__.py
+backend/Knowledge Graph/src/utils/logger.py
+backend/Knowledge Graph/tests/__init__.py
+backend/Knowledge Graph/tests/test_integration.py
+backend/Knowledge Graph/validation_report.md
+backend/Multi-Domain AI Analytics Layer/__init__.py
+backend/Multi-Domain AI Analytics Layer/api/router.py
+backend/Multi-Domain AI Analytics Layer/builder/assessment_builder.py
+backend/Multi-Domain AI Analytics Layer/config/settings.py
+backend/Multi-Domain AI Analytics Layer/engines/base.py
+backend/Multi-Domain AI Analytics Layer/engines/behaviour/components.py
+backend/Multi-Domain AI Analytics Layer/engines/behaviour/engine.py
+backend/Multi-Domain AI Analytics Layer/engines/cyber/components.py
+backend/Multi-Domain AI Analytics Layer/engines/cyber/engine.py
+backend/Multi-Domain AI Analytics Layer/engines/fraud/components.py
+backend/Multi-Domain AI Analytics Layer/engines/fraud/engine.py
+backend/Multi-Domain AI Analytics Layer/engines/quantum/components.py
+backend/Multi-Domain AI Analytics Layer/engines/quantum/engine.py
+backend/Multi-Domain AI Analytics Layer/exceptions/exceptions.py
+backend/Multi-Domain AI Analytics Layer/explanation/explanation_engine.py
+backend/Multi-Domain AI Analytics Layer/fusion/composite_risk.py
+backend/Multi-Domain AI Analytics Layer/intelligence/manager.py
+backend/Multi-Domain AI Analytics Layer/main.py
+backend/Multi-Domain AI Analytics Layer/models/input/incident.py
+backend/Multi-Domain AI Analytics Layer/models/output/assessment.py
+backend/Multi-Domain AI Analytics Layer/models/shared/engine_result.py
+backend/Multi-Domain AI Analytics Layer/orchestrator/orchestrator.py
+backend/Multi-Domain AI Analytics Layer/requirements.txt
+backend/Multi-Domain AI Analytics Layer/tests/__init__.py
+backend/Multi-Domain AI Analytics Layer/tests/conftest.py
+backend/Multi-Domain AI Analytics Layer/tests/test_api.py
+backend/Multi-Domain AI Analytics Layer/tests/test_engines.py
+backend/Multi-Domain AI Analytics Layer/tests/test_new_stabilization.py
+backend/Multi-Domain AI Analytics Layer/tests/test_orchestrator.py
+backend/Multi-Domain AI Analytics Layer/tests/test_validation.py
+backend/Multi-Domain AI Analytics Layer/utils/validation.py
+backend/simulator/.gitignore
+backend/simulator/README.md
+backend/simulator/config.py
+backend/simulator/data_generator.py
+backend/simulator/engine.py
+backend/simulator/models.py
+backend/simulator/requirements.txt
+backend/simulator/run.py
+backend/simulator/scenarios.py
+backend/simulator/test_realism.py
+backend/simulator/test_schemas.py
+backend/simulator/verify_stream.py
+e2e_forwarder.py
+frontend/Dashboard/Module 9/app/api/dependencies.py
+frontend/Dashboard/Module 9/app/api/router.py
+frontend/Dashboard/Module 9/app/core/config.py
+frontend/Dashboard/Module 9/app/core/constants.py
+frontend/Dashboard/Module 9/app/core/examples.py
+frontend/Dashboard/Module 9/app/core/logging.py
+frontend/Dashboard/Module 9/app/exceptions/exceptions.py
+frontend/Dashboard/Module 9/app/main.py
+frontend/Dashboard/Module 9/app/models/dashboard.py
+frontend/Dashboard/Module 9/app/models/enums.py
+frontend/Dashboard/Module 9/app/schemas/input.py
+frontend/Dashboard/Module 9/app/schemas/output.py
+frontend/Dashboard/Module 9/app/services/dashboard_builder.py
+frontend/Dashboard/Module 9/app/services/dashboard_formatter.py
+frontend/Dashboard/Module 9/app/services/dashboard_manager.py
+frontend/Dashboard/Module 9/app/static/app.js
+frontend/Dashboard/Module 9/app/static/falcon_logo.png
+frontend/Dashboard/Module 9/app/static/index.html
+frontend/Dashboard/Module 9/app/static/styles.css
+frontend/Dashboard/Module 9/app/validators/irlp_validator.py
+frontend/Dashboard/Module 9/requirements.txt
+frontend/Dashboard/Module 9/run.py
+frontend/Dashboard/Module 9/solution_architecture.md
+frontend/Dashboard/Module 9/tests/test_dashboard.py
+frontend/README.md
+requirements.txt
+start_falcon.py

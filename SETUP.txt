@@ -1,0 +1,44 @@
+# FALCON MVP Setup Instructions
+
+## Prerequisites
+- Python 3.9 or higher installed on your system.
+
+## Installation Steps
+
+1. **Open a terminal/command prompt** and navigate to the root directory of the project:
+   ```bash
+   cd path/to/FALCON-MVP
+   ```
+
+2. **Create a virtual environment** to keep dependencies isolated:
+   ```bash
+   # On Windows
+   python -m venv venv
+   
+   # On macOS/Linux
+   python3 -m venv venv
+   ```
+
+3. **Activate the virtual environment**:
+   ```bash
+   # On Windows Command Prompt
+   venv\Scripts\activate.bat
+   
+   # On Windows PowerShell
+   venv\Scripts\Activate.ps1
+   
+   # On macOS/Linux
+   source venv/bin/activate
+   ```
+
+4. **Install the required dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Start the FALCON MVP**:
+   ```bash
+   python start_falcon.py
+   ```
+   
+   *This single command will automatically start all background microservices, wait for them to pass their health checks, and launch the unified Dashboard directly in your default web browser.*

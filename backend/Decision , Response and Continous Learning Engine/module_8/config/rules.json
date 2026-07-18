@@ -1,0 +1,116 @@
+[
+  {
+    "rule_name": "Critical Threat Containment Rule",
+    "conditions": {
+      "incident_classification": ["Ransomware", "Data Exfiltration"],
+      "min_unified_risk_score": 80.0,
+      "risk_level": ["Critical", "High"],
+      "min_confidence": 0.8
+    },
+    "strategy": "Containment",
+    "playbook_name": "Critical Threat Isolation Playbook",
+    "execution_type": "Automated",
+    "assigned_team": "SecOps Incident Response",
+    "recommended_actions": [
+      "Isolate affected endpoints",
+      "Revoke session tokens",
+      "Disable lateral authentication vectors"
+    ],
+    "business_justification": "Mitigate widespread damage and business interruption.",
+    "expected_outcome": "Lateral movement contained to isolated subnet."
+  },
+  {
+    "rule_name": "Account Compromise Investigation Rule",
+    "conditions": {
+      "incident_classification": ["Credential Stuffing", "Account Takeover", "Anomaly"],
+      "min_unified_risk_score": 50.0,
+      "risk_level": ["High", "Medium"]
+    },
+    "strategy": "Investigation",
+    "playbook_name": "Compromised Account Investigation Playbook",
+    "execution_type": "Semi-Automated",
+    "assigned_team": "Identity & Access Management",
+    "recommended_actions": [
+      "Enforce password reset",
+      "Monitor account traffic",
+      "Enable step-up authentication"
+    ],
+    "business_justification": "Prevent unauthorized access while maintaining legitimate user experience.",
+    "expected_outcome": "Account secured against unauthorized actors."
+  },
+  {
+    "rule_name": "Standard Endpoint Malware Rule",
+    "conditions": {
+      "incident_classification": ["Malware", "Phishing"]
+    },
+    "strategy": "Containment",
+    "playbook_name": "Standard Malware Response",
+    "execution_type": "Semi-Automated",
+    "assigned_team": "Endpoint Security",
+    "recommended_actions": [
+      "Quarantine malicious files",
+      "Scan endpoint for persistence mechanisms",
+      "Block malicious domains"
+    ],
+    "business_justification": "Remove threat from local endpoint.",
+    "expected_outcome": "Endpoint cleaned and restored."
+  },
+  {
+    "rule_name": "Generalized Cyber Containment Rule",
+    "conditions": {
+      "incident_classification": ["Cyber"],
+      "min_unified_risk_score": 80.0,
+      "risk_level": ["Critical", "High"],
+      "min_confidence": 0.7
+    },
+    "strategy": "Containment",
+    "playbook_name": "Automated Network Containment Playbook",
+    "execution_type": "Automated",
+    "assigned_team": "SecOps Incident Response",
+    "recommended_actions": [
+      "Isolate target hosts and network subnets",
+      "Block malicious command and control source IPs",
+      "Revoke active system authentication tokens"
+    ],
+    "business_justification": "Automatically contain high-risk cyber threats to prevent data leakage and system compromise.",
+    "expected_outcome": "Target entities contained, preventing threat propagation."
+  },
+  {
+    "rule_name": "High-Risk Fraud Prevention Rule",
+    "conditions": {
+      "incident_classification": ["Fraud"],
+      "min_unified_risk_score": 70.0,
+      "risk_level": ["High", "Critical"]
+    },
+    "strategy": "Prevention",
+    "playbook_name": "Transaction Freezing & Account Protection Playbook",
+    "execution_type": "Semi-Automated",
+    "assigned_team": "Fraud Operations Team",
+    "recommended_actions": [
+      "Freeze pending transactions on affected accounts",
+      "Temporarily suspend account transaction privileges",
+      "Initiate customer verification and risk review"
+    ],
+    "business_justification": "Mitigate financial loss and fraud exposure on high-risk accounts.",
+    "expected_outcome": "Unauthorized transaction frozen, protecting customer funds."
+  },
+  {
+    "rule_name": "Behavioral Anomaly Verification Rule",
+    "conditions": {
+      "incident_classification": ["Behaviour"],
+      "min_unified_risk_score": 30.0,
+      "risk_level": ["Medium", "High", "Critical"]
+    },
+    "strategy": "Verification",
+    "playbook_name": "Identity Verification & Active Monitoring Playbook",
+    "execution_type": "Manual",
+    "assigned_team": "L2 Security Operations",
+    "recommended_actions": [
+      "Enforce multi-factor identity challenge sequence",
+      "Initiate active monitoring on user baseline deviations",
+      "Log anomaly details for behavioral profiling"
+    ],
+    "business_justification": "Verify user identity upon detecting abnormal baseline anomalies.",
+    "expected_outcome": "Identity verified or compromised session identified."
+  }
+]

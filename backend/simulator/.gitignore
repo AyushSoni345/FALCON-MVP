@@ -1,0 +1,22 @@
+# Generated simulation data
+events.ndjson
+*.ndjson
+
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

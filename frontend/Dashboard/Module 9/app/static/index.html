@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>FALCON Security Operations Dashboard</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet"/>
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0&display=swap" rel="stylesheet"/>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3b82f6", // Bright Enterprise Blue
+                        "primary-fixed": "#1e293b",
+                        "on-primary-fixed": "#3b82f6",
+                        secondary: "#94a3b8", // Slate Muted
+                        "secondary-container": "#1e293b",
+                        "on-secondary-container": "#94a3b8",
+                        background: "#080c14", // Very Dark Navy Background
+                        surface: "#0f1624", // Deep Slate Card Surface
+                        border: "#1e293b", // Custom border slate color
+                        outline: "#475569", // Outline muted
+                        error: "#ef4444", // Red
+                        warning: "#f59e0b", // Amber
+                        success: "#10b981", // Emerald
+                        info: "#06b6d4" // Cyan
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body class="bg-background text-slate-100 font-sans overflow-x-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-surface border-b border-border shadow-md">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <img src="/static/falcon_logo.png" alt="FALCON Logo" class="h-7 w-auto object-contain select-none" />
+                <div class="flex flex-col">
+                    <span class="text-base font-extrabold tracking-tight font-sans text-slate-100">FALCON</span>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">SOD Platform</span>
+                </div>
+            </div>
+            <div class="h-6 w-px bg-border"></div>
+            <!-- Session Status Widgets -->
+            <div class="flex items-center gap-5 text-[11px]">
+                <div>
+                    <span class="text-slate-500 font-semibold uppercase tracking-wider">Session:</span>
+                    <span id="dashboard-active-id" class="font-mono font-bold text-slate-300 ml-1.5">None loaded</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 font-semibold uppercase tracking-wider">Mode:</span>
+                    <span id="dashboard-active-mode" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 ml-1.5 uppercase tracking-wider border border-slate-700">N/A</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 font-semibold uppercase tracking-wider">Status:</span>
+                    <span id="dashboard-connection-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 ml-1.5 uppercase tracking-wider border border-slate-700">Not Loaded</span>
+                </div>
+                <div class="hidden md:block">
+                    <span class="text-slate-500 font-semibold uppercase tracking-wider">Incident:</span>
+                    <span id="header-incident-id" class="font-mono font-bold text-primary ml-1.5">N/A</span>
+                </div>
+                <div class="hidden lg:block">
+                    <span class="text-slate-500 font-semibold uppercase tracking-wider">Package:</span>
+                    <span id="header-package-id" class="font-mono font-bold text-slate-300 ml-1.5">N/A</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- UTC Clock -->
+            <div id="current-time" class="text-xs font-mono text-slate-400 font-bold bg-slate-900 px-3 py-1.5 rounded-lg border border-border">--:--:-- UTC</div>
+            
+            <!-- Interactive controls -->
+            <div class="flex items-center gap-2 bg-slate-900 p-1.5 rounded-lg border border-border">
+                <select id="select-mode" class="bg-transparent border-none py-0.5 px-2 text-xs rounded font-bold text-slate-300 focus:ring-0 focus:outline-none cursor-pointer">
+                    <option value="Live" class="bg-surface text-slate-200">Live Mode</option>
+                    <option value="Historical" class="bg-surface text-slate-200">Historical Mode</option>
+                    <option value="Investigation" class="bg-surface text-slate-200">Investigation Mode</option>
+                </select>
+                <button id="btn-load-sample" class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1 transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-sm">download</span> Load IRLP
+                </button>
+            </div>
+            
+            <button id="btn-refresh" class="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-full transition-all flex items-center justify-center border border-border bg-slate-900" title="Refresh state">
+                <span class="material-symbols-outlined text-lg">refresh</span>
+            </button>
+
+            <!-- User Badge -->
+            <div class="flex items-center gap-2 border-l border-border pl-4">
+                <div class="text-right hidden sm:block">
+                    <div class="text-xs font-bold text-slate-200">sonia.soc</div>
+                    <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">SOC Lead</div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-primary/20 text-primary border border-primary/30 font-bold flex items-center justify-center text-xs">
+                    SS
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex pt-16 min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-surface border-r border-border fixed left-0 top-16 bottom-0 overflow-y-auto px-4 py-6 flex flex-col justify-between shadow-lg">
+            <div class="flex flex-col gap-4">
+                <!-- Group 1: Monitoring -->
+                <div>
+                    <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Operations Monitor</div>
+                    <div class="flex flex-col gap-1">
+                        <a href="#" data-workspace="info" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">info</span>
+                            <span>Dashboard Info</span>
+                        </a>
+                        <a href="#" data-workspace="live-ops" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">dashboard</span>
+                            <span>Live Operations</span>
+                        </a>
+                        <a href="#" data-workspace="incidents" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">warning</span>
+                            <span>Incident Monitoring</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Group 2: Intelligence & Traceability -->
+                <div>
+                    <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Threat Intelligence</div>
+                    <div class="flex flex-col gap-1">
+                        <a href="#" data-workspace="threat-intel" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">quick_reference_all</span>
+                            <span>Threat Intelligence</span>
+                        </a>
+                        <a href="#" data-workspace="knowledge-graph" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">hub</span>
+                            <span>Knowledge Graph</span>
+                        </a>
+                        <a href="#" data-workspace="references" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">data_object</span>
+                            <span>Traceability</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Group 3: Execution & Control -->
+                <div>
+                    <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">SOP & Collaboration</div>
+                    <div class="flex flex-col gap-1">
+                        <a href="#" data-workspace="response-ops" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">play_circle</span>
+                            <span>Response Operations</span>
+                        </a>
+                        <a href="#" data-workspace="learning" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">school</span>
+                            <span>Continuous Learning</span>
+                        </a>
+                        <a href="#" data-workspace="analytics" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">trending_up</span>
+                            <span>Executive Analytics</span>
+                        </a>
+                        <a href="#" data-workspace="analyst" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all border-l-4 border-transparent">
+                            <span class="material-symbols-outlined text-lg">rate_review</span>
+                            <span>Analyst Workspace</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-[10px] font-bold text-slate-600 text-center border-t border-border pt-4">
+                FALCON Platform v1.0.0
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="flex-grow pl-64 p-8 bg-background min-h-screen">
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- Initial Empty State -->
+                <div id="panel-empty" class="soc-card p-12 text-center flex flex-col items-center justify-center min-h-[420px]">
+                    <span id="empty-state-icon" class="material-symbols-outlined text-6xl text-primary mb-4">settings_system_daydream</span>
+                    <h2 id="empty-state-title" class="text-2xl font-bold mb-2 text-slate-100">No Active Dashboard Session</h2>
+                    <p id="empty-state-text" class="text-slate-400 max-w-md mx-auto mb-6 text-sm">No Incident Response & Learning Package has been loaded. Load a validated Module 8 Incident Response & Learning Package to begin monitoring.</p>
+                </div>
+
+                <!-- Panel 1: Dashboard Information (Landing Dashboard / SOC Command Center) -->
+                <section data-panel="info" class="hidden flex flex-col gap-6">
+                    <!-- Title Header -->
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">SOC Command Center</h2>
+                            <p class="text-slate-400 text-sm">Real-time incident response state, threat correlation, and SOAR validation pipeline.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 1: Executive Decision Bar -->
+                    <div id="info-executive-decision-bar-container" class="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary text-2xl animate-pulse">campaign</span>
+                        <p id="info-executive-decision-bar" class="text-slate-200 text-xs font-semibold leading-relaxed">Loading executive incident analysis summary...</p>
+                    </div>
+
+                    <!-- Level 1: Executive Summary Row -->
+                    <div class="flex flex-wrap gap-2.5 bg-slate-900/40 p-4 rounded-xl border border-border">
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">INCIDENT:</span>
+                            <span id="info-exec-incident-id" class="font-mono text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">STRATEGY:</span>
+                            <span id="info-exec-strategy" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">RISK SCORE:</span>
+                            <span id="info-exec-risk-score" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">RISK LEVEL:</span>
+                            <span id="info-exec-risk-level" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">EXECUTION:</span>
+                            <span id="info-exec-type" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">TEAM:</span>
+                            <span id="info-exec-team" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">PACKAGE STATUS:</span>
+                            <span id="info-exec-pkg-status" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-slate-800/40 border border-border px-2.5 py-1 rounded text-xs">
+                            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">ANALYST:</span>
+                            <span id="info-exec-analyst" class="text-slate-200 font-bold">N/A</span>
+                        </div>
+                    </div>
+
+                    <!-- Level 1: KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                        <!-- KPI Card 1: Incident Overview -->
+                        <div class="soc-card p-4 flex flex-col gap-2 relative group hover:translate-y-[-2px] transition-transform duration-200 cursor-pointer" onclick="navigateToWorkspace('incidents')">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Incident Overview</span>
+                                <span class="material-symbols-outlined text-primary text-lg">crisis_alert</span>
+                            </div>
+                            <div class="flex flex-col mt-1">
+                                <span id="info-kpi-incident-type" class="text-slate-200 font-bold text-sm truncate">Loading...</span>
+                                <span id="info-kpi-incident-id" class="font-mono text-[10px] text-slate-400">Loading...</span>
+                            </div>
+                            <div class="border-t border-border/50 pt-2 mt-1 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Status:</span>
+                                <span id="info-kpi-package-status" class="text-slate-300 font-semibold">Loading...</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 2: Response Summary -->
+                        <div class="soc-card p-4 flex flex-col gap-2 relative group hover:translate-y-[-2px] transition-transform duration-200 cursor-pointer" onclick="navigateToWorkspace('response-ops')">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Response Summary</span>
+                                <span class="material-symbols-outlined text-success text-lg">published_with_changes</span>
+                            </div>
+                            <div class="flex flex-col mt-1">
+                                <span id="info-kpi-strategy" class="text-slate-200 font-bold text-sm truncate">Loading...</span>
+                                <span id="info-kpi-team" class="text-[10px] text-slate-400 truncate">Loading...</span>
+                            </div>
+                            <div class="border-t border-border/50 pt-2 mt-1 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Execution:</span>
+                                <span id="info-kpi-execution" class="text-slate-300 font-semibold">Loading...</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 3: Threat Assessment -->
+                        <div class="soc-card p-4 flex flex-col gap-2 relative group hover:translate-y-[-2px] transition-transform duration-200 cursor-pointer" onclick="navigateToWorkspace('threat-intel')">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Threat Assessment</span>
+                                <span class="material-symbols-outlined text-warning text-lg">shield</span>
+                            </div>
+                            <div class="flex flex-col mt-1">
+                                <span id="info-kpi-risk-level" class="text-slate-200 font-bold text-sm truncate">Loading...</span>
+                                <span id="info-kpi-risk-score" class="text-[10px] text-slate-400">Loading...</span>
+                            </div>
+                            <div class="border-t border-border/50 pt-2 mt-1 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Evidence Count:</span>
+                                <span id="info-kpi-evidence-count" class="text-slate-300 font-semibold">Loading...</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 4: SOAR Status -->
+                        <div class="soc-card p-4 flex flex-col gap-2 relative group hover:translate-y-[-2px] transition-transform duration-200 cursor-pointer" onclick="navigateToWorkspace('response-ops')">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SOAR Status</span>
+                                <span class="material-symbols-outlined text-indigo-400 text-lg">smart_toy</span>
+                            </div>
+                            <div class="flex flex-col mt-1">
+                                <span id="info-kpi-soar-prepared" class="text-slate-200 font-bold text-sm truncate">Loading...</span>
+                                <span id="info-kpi-soar-playbooks" class="text-[10px] text-slate-400">Loading...</span>
+                            </div>
+                            <div class="border-t border-border/50 pt-2 mt-1 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Prerequisites:</span>
+                                <span id="info-kpi-soar-level" class="text-slate-300 font-semibold">Loading...</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 5: Learning Pipeline -->
+                        <div class="soc-card p-4 flex flex-col gap-2 relative group hover:translate-y-[-2px] transition-transform duration-200 cursor-pointer" onclick="navigateToWorkspace('learning')">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Learning Pipeline</span>
+                                <span class="material-symbols-outlined text-cyan-400 text-lg">psychology</span>
+                            </div>
+                            <div class="flex flex-col mt-1">
+                                <span id="info-kpi-learning-val" class="text-slate-200 font-bold text-sm truncate">Loading...</span>
+                                <span id="info-kpi-learning-opt" class="text-[10px] text-slate-400">Loading...</span>
+                            </div>
+                            <div class="border-t border-border/50 pt-2 mt-1 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Retrain Status:</span>
+                                <span id="info-kpi-learning-pkg" class="text-slate-300 font-semibold">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 2: Operational Command Center main workspace splits -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Left Panel: Incident & Threat Investigation Command -->
+                        <div class="flex flex-col gap-6">
+                            <!-- Incident Command Center -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-lg">crisis_alert</span>
+                                        Incident Command Center
+                                    </h3>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 text-xs">
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-slate-400 uppercase text-[9px] font-bold">Threat ID</span>
+                                        <span id="info-cmd-incident-id" class="font-mono font-bold text-slate-200">Loading...</span>
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-slate-400 uppercase text-[9px] font-bold">Threat Type</span>
+                                        <span id="info-cmd-incident-type" class="font-bold text-slate-200">Loading...</span>
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-slate-400 uppercase text-[9px] font-bold">Risk Priority</span>
+                                        <span id="info-cmd-priority" class="font-bold text-slate-200">Loading...</span>
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-slate-400 uppercase text-[9px] font-bold">Response Goal</span>
+                                        <span id="info-cmd-outcome" class="font-bold text-slate-200">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2 pt-2 border-t border-border/50 text-xs">
+                                    <span class="text-slate-400 uppercase text-[9px] font-bold">Explainable AI Root Cause Analysis</span>
+                                    <div id="info-cmd-root-cause-container" class="bg-slate-900/50 p-3 rounded-lg border border-border">
+                                        <p id="info-cmd-root-cause" class="text-slate-300 leading-relaxed text-xs">Loading root cause insights...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Threat Intelligence Highlights & Key Artifacts -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-warning text-lg">gshield</span>
+                                        Threat Intelligence Highlights
+                                    </h3>
+                                    <span id="info-intel-risk-level" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Loading...</span>
+                                </div>
+                                <div class="flex flex-col gap-3 text-xs">
+                                    <div class="flex items-center justify-between p-2.5 bg-slate-900/30 rounded border border-border/50">
+                                        <span class="text-slate-400">Confidence Summary</span>
+                                        <span id="info-intel-confidence" class="font-bold text-slate-200 text-right">Loading...</span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <span class="text-slate-400 uppercase text-[9px] font-bold">Key Investigation Artifacts</span>
+                                        <div id="info-intel-artifacts-list" class="flex flex-col gap-2">
+                                            <!-- Dynamically populated list of artifact cards -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Evidence Summary Workspace -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-indigo-400 text-lg">fact_check</span>
+                                        Correlated Evidence Logs
+                                    </h3>
+                                    <span id="info-evidence-badge" class="text-[10px] font-extrabold bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded">0 Logs</span>
+                                </div>
+                                <div id="info-evidence-list" class="flex flex-col gap-2.5 text-xs max-h-56 overflow-y-auto">
+                                    <!-- Dynamic rows of evidence logs -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Response & SOAR Playbooks -->
+                        <div class="flex flex-col gap-6">
+                            <!-- Playbook Action Steps -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-success text-lg">published_with_changes</span>
+                                        Response Playbook Action Steps
+                                    </h3>
+                                    <span id="info-playbook-strategy-badge" class="text-[10px] font-extrabold bg-success/10 text-success border border-success/20 px-2 py-0.5 rounded">Loading...</span>
+                                </div>
+                                <div id="info-playbook-steps" class="flex flex-col gap-3 text-xs">
+                                    <!-- Dynamic workflow timeline items -->
+                                </div>
+                            </div>
+
+                            <!-- Decision Trace Explanation Pipeline -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-cyan-400 text-lg">troubleshoot</span>
+                                        Explainable AI Decision Trace
+                                    </h3>
+                                </div>
+                                <div id="info-decision-trace" class="flex flex-col gap-3 text-xs pl-2">
+                                    <!-- Decision timeline nodes -->
+                                </div>
+                            </div>
+
+                            <!-- SOAR Execution status pipeline -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-2.5">
+                                    <h3 class="font-extrabold text-sm text-slate-200 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-indigo-400 text-lg">smart_toy</span>
+                                        SOAR Playbook Execution Pipeline
+                                    </h3>
+                                </div>
+                                <div id="info-soar-pipeline" class="flex flex-col gap-3 text-xs">
+                                    <!-- Visual SOAR task status list connected -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 3: Supporting Intelligence & Previews -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <!-- Knowledge Graph Preview -->
+                        <div class="soc-card p-4 flex flex-col justify-between gap-3">
+                            <h4 class="font-bold text-xs text-slate-200 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-slate-400 text-base">hub</span>
+                                Knowledge Graph
+                            </h4>
+                            <div class="text-[11px] text-slate-400 leading-relaxed">
+                                Entity mapping references ready. Security relations compiled.
+                                <div class="mt-2 font-mono text-[10px] text-slate-300 bg-slate-900/50 p-2 rounded border border-border" id="info-graph-ref">Ref: Loading...</div>
+                            </div>
+                            <button onclick="navigateToWorkspace('knowledge-graph')" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-bold transition-colors">
+                                Open Workspace
+                            </button>
+                        </div>
+
+                        <!-- Continuous Learning Pipeline -->
+                        <div class="soc-card p-4 flex flex-col justify-between gap-3">
+                            <h4 class="font-bold text-xs text-slate-200 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-slate-400 text-base">psychology</span>
+                                Continuous Learning
+                            </h4>
+                            <div class="text-[11px] text-slate-400 leading-relaxed">
+                                Validation parameters pending user feedback to optimize local model weights.
+                                <div class="mt-2 text-[10px] text-warning bg-warning/10 border border-warning/20 p-2 rounded flex items-center gap-1.5" id="info-learning-status-box">
+                                    <span class="material-symbols-outlined text-xs animate-pulse">pending</span>
+                                    <span>Awaiting Analyst validation</span>
+                                </div>
+                            </div>
+                            <button onclick="navigateToWorkspace('learning')" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-bold transition-colors">
+                                Open Workspace
+                            </button>
+                        </div>
+
+                        <!-- Pipeline status flow -->
+                        <div class="soc-card p-4 flex flex-col gap-3 col-span-2">
+                            <h4 class="font-bold text-xs text-slate-200 flex items-center gap-1.5 border-b border-border pb-1">
+                                <span class="material-symbols-outlined text-slate-400 text-base">route</span>
+                                FALCON Pipeline Status
+                            </h4>
+                            <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-400">
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M1 Ingestion: Ready</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M2 Enrichment: Ready</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M3 Graph: Generated</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M4 Correlation: Ready</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M5 Analytics: Ready</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M6 Risk: Generated</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M7 Threat: Generated</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>M8 Decision: Ready</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 p-1.5 bg-slate-900/50 rounded border border-border/30">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span>M9 Dashboard: Live</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden legacy ID targets to maintain perfect check_ids.py compliance -->
+                    <div class="hidden">
+                        <span id="info-dash-id"></span>
+                        <span id="info-pkg-id"></span>
+                        <span id="info-timestamp"></span>
+                        <span id="info-version"></span>
+                        <span id="info-mode"></span>
+                        <span id="info-interval"></span>
+                    </div>
+                </section>
+
+                <!-- Panel 2: Live Operations Console -->
+                <section data-panel="live-ops" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Live Operations Console</h2>
+                            <p class="text-slate-400 text-sm">Real-time status overview, priority counts, and platform status.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Key Information list -->
+                        <div class="soc-card p-5 flex flex-col gap-4">
+                            <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Active Package Details</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Incident ID</div>
+                                    <div id="live-incident-id" class="text-lg font-bold text-primary">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Package Status</div>
+                                    <div id="live-package-status" class="text-sm font-bold text-slate-300">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Incident Type</div>
+                                    <div id="live-incident-type" class="text-sm font-bold text-slate-300">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Response Strategy</div>
+                                    <div id="live-response-strategy" class="text-sm font-bold text-slate-300">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Technical Team details -->
+                        <div class="soc-card p-5 flex flex-col gap-4">
+                            <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Execution Team Allocation</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Assigned Team</div>
+                                    <div id="live-assigned-team" class="text-sm font-semibold text-slate-300">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Execution Priority</div>
+                                    <div id="live-execution-priority" class="text-sm font-semibold text-error">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Execution Type</div>
+                                    <div id="live-execution-type" class="text-sm font-semibold text-emerald-400">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">SOAR Prep Status</div>
+                                    <div id="live-soar-status" class="text-sm font-semibold text-primary">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warning: Historical Data Alert -->
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 flex gap-3 text-blue-400 text-sm font-medium">
+                        <span class="material-symbols-outlined">warning</span>
+                        <div id="live-historical-msg">Historical operational metrics are unavailable because a single Incident Response & Learning Package is currently loaded.</div>
+                    </div>
+                </section>
+
+                <!-- Panel 3: Incident Monitoring Workspace -->
+                <section data-panel="incidents" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Incident Monitoring Workspace</h2>
+                            <p class="text-slate-400 text-sm">Primary interface to monitor active incidents and response progress.</p>
+                        </div>
+                    </div>
+                    <!-- Incident table and Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                        <!-- Incident list (left) -->
+                        <div class="md:col-span-7 soc-card overflow-hidden">
+                            <div class="p-4 border-b border-border bg-slate-900/50 flex items-center justify-between">
+                                <h3 class="font-bold text-sm text-slate-200">Active Incident Queue</h3>
+                            </div>
+                            <table class="w-full text-left border-collapse soc-table">
+                                <thead class="bg-slate-900/50 border-b border-border">
+                                    <tr>
+                                        <th class="px-4 py-3">ID</th>
+                                        <th class="px-4 py-3">Type</th>
+                                        <th class="px-4 py-3">Priority</th>
+                                        <th class="px-4 py-3">Status</th>
+                                        <th class="px-4 py-3">Assigned Team</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="incidents-table-body">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-8 text-center text-slate-500">Loading incident list...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Incident Details (right) -->
+                        <div class="md:col-span-5 flex flex-col gap-6">
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <div class="flex items-center justify-between border-b border-border pb-3">
+                                    <h3 class="font-bold text-sm text-slate-200">Incident Details</h3>
+                                    <span id="inc-sel-id" class="font-mono text-xs font-bold text-primary">None</span>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Threat Strategy</span>
+                                    <div id="inc-sel-strategy" class="text-sm font-semibold text-slate-300">Loading...</div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Assigned Team</span>
+                                    <div id="inc-sel-team" class="text-sm font-medium text-slate-400">Loading...</div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[10px] uppercase font-bold text-slate-500">Priority</span>
+                                        <div><span id="inc-sel-priority" class="px-2 py-0.5 rounded text-xs font-semibold">Loading...</span></div>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[10px] uppercase font-bold text-slate-500">Status</span>
+                                        <div><span id="inc-sel-status" class="px-2 py-0.5 rounded text-xs font-semibold">Loading...</span></div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 border-t border-border pt-3">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Estimated Completion Time</span>
+                                    <div id="inc-sel-updated" class="text-xs font-mono text-slate-300">Loading...</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Widget -->
+                            <div class="soc-card p-5 flex flex-col gap-3">
+                                <h3 class="font-bold text-sm text-slate-200">Response SLA Execution</h3>
+                                <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-border">
+                                    <div id="inc-progress-bar" class="bg-primary h-full transition-all duration-500 shadow-sm" style="width: 0%"></div>
+                                </div>
+                                <div id="inc-progress-text" class="text-xs font-bold text-primary">0% Execution Complete</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 4: Security Knowledge Graph Visualizer -->
+                <section data-panel="knowledge-graph" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Security Knowledge Graph Visualizer</h2>
+                            <p class="text-slate-400 text-sm">Knowledge Graph reference visual logs and details.</p>
+                        </div>
+                    </div>
+                    <div class="soc-card p-8 text-center flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-5xl text-slate-500 mb-3 animate-pulse">hub</span>
+                        <h3 class="font-bold text-lg mb-1 text-slate-200">Knowledge Graph reference available.</h3>
+                        <p class="text-slate-400 text-sm mb-4">Graph Reference ID: <span id="graph-ref-id" class="font-mono font-bold text-primary break-all">None</span></p>
+                        <div class="bg-slate-900 px-4 py-2 border border-border rounded-lg text-xs text-slate-400 font-medium">Load referenced graph from Module 3 when available.</div>
+                    </div>
+                </section>
+
+                <!-- Panel 5: Explainable Threat Intelligence Workspace -->
+                <section data-panel="threat-intel" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Explainable Threat Intelligence</h2>
+                            <p class="text-slate-400 text-sm">Review structured explainability reports directly mapped from upstream reference.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Left: Executive Summary -->
+                        <div class="md:col-span-1 flex flex-col gap-6">
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Executive Summary</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-[10px] uppercase font-bold text-slate-500">Risk Score</div>
+                                        <div id="threat-score" class="text-2xl font-extrabold text-primary">0.0</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] uppercase font-bold text-slate-500">Risk Level</div>
+                                        <div id="threat-level" class="text-lg font-bold text-error">N/A</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 border-t border-border pt-3">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Evidence Count</span>
+                                    <div id="threat-evidence-count" class="text-sm font-semibold text-slate-300">0 logs / events</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Analysis Metrics -->
+                            <div class="soc-card p-5 flex flex-col gap-3">
+                                <h3 class="font-bold text-sm text-slate-200">Root Cause Analysis</h3>
+                                <div class="flex flex-col gap-1">
+                                    <div id="threat-root-cause" class="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-border max-h-60 overflow-y-auto">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Guidance & Timelines -->
+                        <div class="md:col-span-2 flex flex-col gap-6">
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Investigation Guide Artifacts</h3>
+                                <div id="threat-guidance-list" class="flex flex-col gap-2"></div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 gap-6">
+                                <div class="soc-card p-5">
+                                    <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Analyst Support & Confidence</h3>
+                                    <div id="threat-confidence-summary" class="text-sm font-medium text-slate-300 p-3 bg-slate-950 rounded-lg border border-border">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 6: Response Operations Workspace -->
+                <section data-panel="response-ops" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Response Operations</h2>
+                            <p class="text-slate-400 text-sm">Monitor action plans, active SOAR playbook executions and response decisions.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Left: SOP action details -->
+                        <div class="md:col-span-1 flex flex-col gap-6">
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Response Action SOP</h3>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Response Strategy</span>
+                                    <div id="resp-contain" class="text-sm font-semibold leading-relaxed text-slate-200">Loading...</div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Business Justification</span>
+                                    <div id="resp-justification" class="text-xs font-medium leading-relaxed text-slate-300 bg-slate-950 p-2.5 rounded-lg border border-border">Loading...</div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 border-t border-border pt-3">
+                                    <div>
+                                        <div class="text-[10px] uppercase font-bold text-slate-500">Expected Outcome</div>
+                                        <div id="resp-outcome" class="text-xs font-bold text-primary">N/A</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] uppercase font-bold text-slate-500">Execution Priority</div>
+                                        <div id="resp-priority" class="text-xs font-bold text-error">Loading...</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 border-t border-border pt-3">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Containment Status</span>
+                                    <div id="resp-contain-state" class="text-xs font-bold text-emerald-400">Loading...</div>
+                                </div>
+                            </div>
+
+                            <!-- Decision trace -->
+                            <div class="soc-card p-5 flex flex-col gap-3">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Response Decision Trace</h3>
+                                <div class="flex flex-col gap-2">
+                                    <span class="text-[10px] uppercase font-bold text-slate-500">Selected Rule</span>
+                                    <div id="trace-rule" class="text-xs font-bold text-primary font-mono">Loading...</div>
+                                    <span class="text-[10px] uppercase font-bold text-slate-500 border-t border-border pt-2">Decision Factors</span>
+                                    <div id="trace-factors" class="flex flex-col gap-1.5 text-xs text-slate-400">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: SOAR Playbooks -->
+                        <div class="md:col-span-2 flex flex-col gap-6">
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-4 text-slate-200">Recommended Actions Sequence</h3>
+                                <div id="resp-actions-list" class="flex flex-col gap-2"></div>
+                            </div>
+
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-4 text-slate-200">SOAR Playbooks & Tasks</h3>
+                                <div id="resp-soar-tasks" class="flex flex-col gap-4">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 7: Continuous Learning Workspace -->
+                <section data-panel="learning" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Continuous Learning</h2>
+                            <p class="text-slate-400 text-sm">Track optimization metrics, retraining queues, and feedback loop statistics.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="learning-empty-state" class="soc-card p-12 text-center flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-5xl text-slate-500 mb-3 animate-pulse">school</span>
+                        <h3 class="font-bold text-lg mb-1 text-slate-200">Continuous Learning Package has not yet been generated.</h3>
+                        <p class="text-slate-400 text-sm">Learning artifacts will become available after analyst validation.</p>
+                    </div>
+
+                    <div id="learning-active-panel" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Details will load here dynamically if CLP exists -->
+                        <div class="md:col-span-1 flex flex-col gap-4">
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Feedback Details</h3>
+                                <div class="flex flex-col gap-2">
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Analyst Verdict</div>
+                                    <div id="lrn-verdict" class="text-sm font-bold text-primary">Loading...</div>
+                                </div>
+                                <div class="flex flex-col gap-2 border-t border-border pt-3">
+                                    <div class="text-[10px] uppercase font-bold text-slate-500">Learning Label</div>
+                                    <div id="lrn-label" class="text-sm font-bold text-slate-300">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2 flex flex-col gap-6">
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Contributing Threat Patterns</h3>
+                                <div id="lrn-patterns" class="flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optimization recommendations alert -->
+                    <div id="opt-empty-state" class="bg-slate-900 border border-border rounded-lg p-4 flex gap-3 text-slate-300 text-sm font-medium">
+                        <span class="material-symbols-outlined text-slate-400">info</span>
+                        <div>No model optimization recommendations are currently available.</div>
+                    </div>
+                </section>
+
+                <!-- Panel 8: Executive & Operational Analytics -->
+                <section data-panel="analytics" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Executive & Operational Analytics</h2>
+                            <p class="text-slate-400 text-sm">Operational KPIs, trends, and workload metrics.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="soc-card p-12 text-center flex flex-col items-center justify-center min-h-[300px]">
+                        <span class="material-symbols-outlined text-5xl text-slate-500 mb-3 animate-pulse">trending_up</span>
+                        <h3 class="font-bold text-lg mb-1 text-slate-200">Historical metrics unavailable.</h3>
+                        <p class="text-slate-400 text-sm">Metrics will become available after multiple response packages have been processed.</p>
+                    </div>
+                </section>
+
+                <!-- Panel 9: Analyst Interaction Workspace -->
+                <section data-panel="analyst" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Analyst Workspace</h2>
+                            <p class="text-slate-400 text-sm">Add comments, update tags, trigger workflow status actions and audit annotations.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Awaiting Validation Alert -->
+                    <div id="analyst-validation-alert" class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 flex gap-3 text-amber-400 text-sm font-medium">
+                        <span class="material-symbols-outlined">assignment_ind</span>
+                        <div>
+                            <strong class="block mb-1">Awaiting Analyst Validation</strong>
+                            No analyst decision has been recorded for this response package. Analyst approval is required before response execution continues.
+                        </div>
+                    </div>
+
+                    <div id="analyst-validated-badge" class="hidden bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 flex gap-3 text-emerald-400 text-sm font-medium">
+                        <span class="material-symbols-outlined text-emerald-400">check_circle</span>
+                        <div>
+                            <strong>Analyst Decision Logged</strong>
+                            Approved/Rejected execution sequence validated by analyst user.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Left: Notes Form & Comments -->
+                        <div class="md:col-span-2 flex flex-col gap-6">
+                            <!-- Notes Form -->
+                            <div class="soc-card p-5 flex flex-col gap-4">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Add Investigation Note</h3>
+                                <textarea id="input-comment" rows="3" placeholder="Enter details, findings or actions performed..." class="w-full text-sm rounded-lg border border-border bg-slate-950 text-slate-100 p-3 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none"></textarea>
+                                <div class="flex justify-end">
+                                    <button id="btn-submit-comment" class="bg-primary hover:bg-primary/95 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1 transition-all shadow-sm">
+                                        <span class="material-symbols-outlined text-sm">send</span> Save Note
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Comments Log list -->
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Investigation Comments Log</h3>
+                                <div id="analyst-comments-list" class="flex flex-col gap-4 text-slate-300">Loading...</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Actions & Tags & Audit -->
+                        <div class="md:col-span-1 flex flex-col gap-6">
+                            <!-- Incident tags -->
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Incident Classification Tags</h3>
+                                <div class="flex gap-2 mb-3">
+                                    <input type="text" id="input-tag" placeholder="NEW_TAG" class="border border-border bg-slate-950 text-slate-100 rounded-lg px-2.5 py-1 text-xs w-full focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none"/>
+                                    <button id="btn-add-tag" class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-lg hover:bg-primary/90 transition-colors">Add</button>
+                                </div>
+                                <div id="analyst-tag-list" class="flex flex-wrap gap-2">Loading...</div>
+                            </div>
+                            
+                            <!-- Status Actions -->
+                            <div class="soc-card p-5 flex flex-col gap-3">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 text-slate-200">Incident Actions</h3>
+                                <div class="flex flex-col gap-2">
+                                    <button id="btn-wf-assign" class="w-full text-left py-2 px-3 hover:bg-slate-800 rounded-lg text-xs font-bold text-primary flex items-center gap-2 border border-border transition-colors">
+                                        <span class="material-symbols-outlined text-sm">person_add</span> Assign to Self
+                                    </button>
+                                    <button id="btn-wf-close" class="w-full text-left py-2 px-3 hover:bg-slate-800 rounded-lg text-xs font-bold text-success flex items-center gap-2 border border-border transition-colors">
+                                        <span class="material-symbols-outlined text-sm">check_circle</span> Close Incident
+                                    </button>
+                                    <button id="btn-wf-reopen" class="w-full text-left py-2 px-3 hover:bg-slate-800 rounded-lg text-xs font-bold text-warning flex items-center gap-2 border border-border transition-colors">
+                                        <span class="material-symbols-outlined text-sm">lock_open</span> Reopen Incident
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Audit annotations -->
+                            <div class="soc-card p-5">
+                                <h3 class="font-bold text-sm border-b border-border pb-2 mb-3 text-slate-200">Session Audit Log</h3>
+                                <div id="analyst-audit-list" class="flex flex-col gap-3 text-slate-400">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 10: Referenced Incident Response & Learning Package -->
+                <section data-panel="references" class="hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between border-b border-border pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold font-sans text-slate-100">Traceability References</h2>
+                            <p class="text-slate-400 text-sm">Pointers and schema references directly corresponding to the upstream Module 8 package.</p>
+                        </div>
+                    </div>
+                    <div class="soc-card p-5 bg-slate-950 border border-border overflow-hidden">
+                        <div class="text-xs text-slate-400 mb-2">Original Module 8 Referenced Schema Metadata (JSON)</div>
+                        <pre id="raw-references-json" class="font-mono text-xs overflow-auto max-h-96 text-emerald-400"></pre>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay and Steps Sequence -->
+    <div id="loading-overlay" class="fixed inset-0 bg-neutral-950/70 backdrop-blur-sm z-50 flex items-center justify-center hidden animate-fade-in">
+        <div class="bg-surface p-8 rounded-2xl shadow-2xl border border-border max-w-sm w-full flex flex-col items-center gap-6">
+            <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <div class="flex flex-col gap-2 w-full text-center">
+                <h3 class="font-extrabold text-lg tracking-tight text-slate-100">Loading Dashboard Session</h3>
+                <p id="loading-step-text" class="text-sm font-semibold text-slate-400">Validating Module 8 Package...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

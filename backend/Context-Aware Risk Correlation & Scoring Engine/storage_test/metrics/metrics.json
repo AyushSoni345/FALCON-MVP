@@ -1,0 +1,16 @@
+{
+  "processed_count": 5,
+  "average_latency_ms": 4.493188858032227,
+  "validation_failures": 0,
+  "suppressed_alerts": 1,
+  "priority_distribution": {
+    "P2": 3,
+    "P4": 1,
+    "P3": 1
+  },
+  "average_confidence": 0.7667272727272728,
+  "average_completeness": 0.909090909090909,
+  "rule_hit_count": {
+    "isolated_lab_server": 1
+  }
+}

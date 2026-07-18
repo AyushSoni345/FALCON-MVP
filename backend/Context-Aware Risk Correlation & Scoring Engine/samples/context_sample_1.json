@@ -1,0 +1,9 @@
+{
+  "customer_segment": "HNW",
+  "business_process": "Core Ledger",
+  "asset_type": "Production Database",
+  "production_system": true,
+  "transaction_value": 75000.0,
+  "data_classification": "PII",
+  "asset_criticality": "Critical"
+}

@@ -1,0 +1,11 @@
+thresholds:
+  p1:
+    min_score: 85.0
+    required_business_criticality: ["Critical", "High"]
+  p2:
+    min_score: 70.0
+    required_business_criticality: ["Critical", "High", "Medium"]
+  p3:
+    min_score: 40.0
+  p4:
+    min_score: 0.0

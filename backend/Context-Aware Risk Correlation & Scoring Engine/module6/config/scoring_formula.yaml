@@ -1,0 +1,4 @@
+formula_type: "weighted_max_with_boost"
+max_boost: 10.0
+multi_domain_boost_factor: 5.0
+multi_domain_threshold: 70.0
